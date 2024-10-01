@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Calculadora Moderna</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="calculator">
+      <div class="display">
+        <input type="text" id="result" readonly />
+      </div>
+      <div class="keys">
+        <button class="clear">C</button>
+        <button class="backspace">←</button>
+        <button class="operator">/</button>
+        <button class="operator">*</button>
+        <button class="operator">-</button>
+        <button class="operator">+</button>
+
+        <button>7</button>
+        <button>8</button>
+        <button>9</button>
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>0</button>
+        <button class="decimal">.</button>
+        <button class="equals">=</button>
+      </div>
+    </div>
+    <script>
+      const buttons = document.querySelectorAll(".keys button");
+      const display = document.getElementById("result");
+
+      let decimalAdded = false;
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const value = button.textContent;
+
+          if (button.classList.contains("clear")) {
+            display.value = "";
+            decimalAdded = false;
+          } else if (button.classList.contains("backspace")) {
+            const lastChar = display.value.slice(-1);
+            if (lastChar === ".") {
+              decimalAdded = false;
+            }
+            display.value = display.value.slice(0, -1);
+          } else if (button.classList.contains("equals")) {
+            try {
+              display.value = eval(display.value);
+              decimalAdded = false;
+            } catch (e) {
+              display.value = "Erro";
+            }
+          } else if (button.classList.contains("operator")) {
+            const lastChar = display.value.slice(-1);
+            if (["+", "-", "*", "/"].includes(lastChar)) {
+              display.value = display.value.slice(0, -1) + value;
+            } else if (display.value.length == 0) {
+              // Evita adicionar operador no início
+            } else {
+              display.value += value;
+            }
+            decimalAdded = false;
+          } else if (button.classList.contains("decimal")) {
+            if (!decimalAdded && display.value.length > 0) {
+              display.value += value;
+              decimalAdded = true;
+            }
+          } else {
+            display.value += value;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
